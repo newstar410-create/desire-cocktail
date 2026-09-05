@@ -252,11 +252,10 @@ const renderLikertScale = (questionId) => {
 
     return (
       <div className="mt-5 w-full max-w-[400px] mx-auto px-1 sm:px-0">
-        {/* 使用 Grid 強制劃分 3 個區塊：文字 | 5個按鈕 | 文字 */}
         <div className="grid grid-cols-[36px_1fr_36px] sm:grid-cols-[48px_1fr_48px] items-center gap-1 sm:gap-2">
           
-          {/* 左側文字 */}
-          <div className="text-[10px] sm:text-xs font-medium text-slate-500 text-center leading-tight">
+          {/* 左側文字 - 加入 pointer-events-none 讓文字變成「靈體」，不會誤擋手指點擊 */}
+          <div className="text-[10px] sm:text-xs font-medium text-slate-500 text-center leading-tight pointer-events-none">
             強烈<br/>不同意
           </div>
 
@@ -266,20 +265,21 @@ const renderLikertScale = (questionId) => {
               const isSelected = state.answers[questionId] === opt.value;
               return (
                 <div key={opt.value} className="flex justify-center flex-1">
-                  <motion.button
-                    whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+                  {/* 拔除 motion.button，改回原生的 <button>，並加上 touch-manipulation 關閉 iOS 延遲 */}
+                  <button
                     onClick={() => dispatch({ type: 'ANSWER', payload: { id: questionId, score: opt.value } })}
-                    className={`rounded-full border-[1.5px] transition-all duration-200 flex items-center justify-center ${opt.size} ${isSelected ? opt.activeClass : `bg-slate-900 hover:bg-slate-800 ${opt.defaultClass}`}`}
+                    className={`rounded-full border-[1.5px] transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-90 touch-manipulation ${opt.size} ${isSelected ? opt.activeClass : `bg-slate-900 hover:bg-slate-800 ${opt.defaultClass}`}`}
+                    style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
-                  </motion.button>
+                  </button>
                 </div>
               );
             })}
           </div>
 
-          {/* 右側文字 */}
-          <div className="text-[10px] sm:text-xs font-medium text-pink-500/70 text-center leading-tight">
+          {/* 右側文字 - 同樣加入 pointer-events-none */}
+          <div className="text-[10px] sm:text-xs font-medium text-pink-500/70 text-center leading-tight pointer-events-none">
             強烈<br/>同意
           </div>
           
