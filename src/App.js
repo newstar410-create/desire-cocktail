@@ -152,17 +152,13 @@ export default function App() {
         const parsed = JSON.parse(saved);
         if (parsed.answers) dispatch({ type: 'LOAD_STATE', payload: parsed });
       }
-    } catch (e) {
-      console.warn("目前環境不支援進度自動儲存", e);
-    }
+    } catch (e) {}
   }, []);
 
   useEffect(() => {
     try {
       localStorage.setItem('desire_cocktail_state', JSON.stringify(state));
-    } catch (e) {
-      // 靜默失敗
-    }
+    } catch (e) {}
   }, [state]);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -201,7 +197,6 @@ export default function App() {
       setGeneratedImage(image); 
       
     } catch (err) {
-      console.error('Screenshot failed:', err);
       alert('圖片生成失敗，請確保環境支援截圖功能。');
     } finally {
       setIsDownloading(false);
@@ -234,41 +229,41 @@ export default function App() {
       <motion.button
         whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
         onClick={() => { dispatch({ type: 'START_QUIZ' }); scrollToTop(); }}
-        className="px-8 py-3 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-base shadow-[0_0_20px_rgba(219,39,119,0.5)] flex items-center gap-2 transition-shadow hover:shadow-[0_0_30px_rgba(219,39,119,0.7)]"
+        className="px-8 py-3 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-base shadow-[0_0_20px_rgba(219,39,119,0.5)] flex items-center gap-2 transition-shadow"
       >
         開始測驗 <ArrowRight className="w-4 h-4" />
       </motion.button>
     </motion.div>
   );
 
-const renderLikertScale = (questionId) => {
+  const renderLikertScale = (questionId) => {
+    // 終極防彈版：徹底拔除 hover 樣式，根絕 Safari 雙擊與卡死 Bug
     const options = [
-      { value: 1, size: 'w-7 h-7 sm:w-11 sm:h-11', defaultClass: 'border-slate-700 text-slate-500', activeClass: 'bg-slate-700 border-slate-500 text-white shadow-inner' },
-      { value: 2, size: 'w-6 h-6 sm:w-9 sm:h-9', defaultClass: 'border-slate-800 text-slate-600', activeClass: 'bg-slate-600 border-slate-500 text-white' },
-      { value: 3, size: 'w-5 h-5 sm:w-7 sm:h-7',   defaultClass: 'border-slate-800/50 text-slate-700', activeClass: 'bg-blue-900/60 border-blue-500/50 text-blue-300' },
-      { value: 4, size: 'w-6 h-6 sm:w-9 sm:h-9', defaultClass: 'border-purple-900/50 text-purple-800', activeClass: 'bg-purple-600 border-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]' },
-      { value: 5, size: 'w-7 h-7 sm:w-11 sm:h-11', defaultClass: 'border-pink-900/50 text-pink-800', activeClass: 'bg-pink-600 border-pink-500 text-white shadow-[0_0_20px_rgba(219,39,119,0.6)]' },
+      { value: 1, size: 'w-7 h-7 sm:w-11 sm:h-11', defaultClass: 'border-slate-700 text-slate-500 bg-slate-900', activeClass: 'bg-slate-700 border-slate-500 text-white shadow-inner' },
+      { value: 2, size: 'w-6 h-6 sm:w-9 sm:h-9', defaultClass: 'border-slate-800 text-slate-600 bg-slate-900', activeClass: 'bg-slate-600 border-slate-500 text-white' },
+      { value: 3, size: 'w-5 h-5 sm:w-7 sm:h-7',   defaultClass: 'border-slate-800/50 text-slate-700 bg-slate-900', activeClass: 'bg-blue-900/60 border-blue-500/50 text-blue-300' },
+      { value: 4, size: 'w-6 h-6 sm:w-9 sm:h-9', defaultClass: 'border-purple-900/50 text-purple-800 bg-slate-900', activeClass: 'bg-purple-600 border-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]' },
+      { value: 5, size: 'w-7 h-7 sm:w-11 sm:h-11', defaultClass: 'border-pink-900/50 text-pink-800 bg-slate-900', activeClass: 'bg-pink-600 border-pink-500 text-white shadow-[0_0_20px_rgba(219,39,119,0.6)]' },
     ];
 
     return (
       <div className="mt-5 w-full max-w-[400px] mx-auto px-1 sm:px-0">
         <div className="grid grid-cols-[36px_1fr_36px] sm:grid-cols-[48px_1fr_48px] items-center gap-1 sm:gap-2">
           
-          {/* 左側文字 - 加入 pointer-events-none 讓文字變成「靈體」，不會誤擋手指點擊 */}
-          <div className="text-[10px] sm:text-xs font-medium text-slate-500 text-center leading-tight pointer-events-none">
+          <div className="text-[10px] sm:text-xs font-medium text-slate-500 text-center leading-tight pointer-events-none select-none">
             強烈<br/>不同意
           </div>
 
-          {/* 中間 5 個按鈕 */}
           <div className="flex items-center justify-between w-full px-1">
             {options.map((opt) => {
               const isSelected = state.answers[questionId] === opt.value;
               return (
                 <div key={opt.value} className="flex justify-center flex-1">
-                  {/* 拔除 motion.button，改回原生的 <button>，並加上 touch-manipulation 關閉 iOS 延遲 */}
+                  {/* 使用原生 HTML button，並加上 select-none 和 touch-manipulation 防止所有瀏覽器干擾 */}
                   <button
+                    type="button"
                     onClick={() => dispatch({ type: 'ANSWER', payload: { id: questionId, score: opt.value } })}
-                    className={`rounded-full border-[1.5px] transition-all duration-200 flex items-center justify-center cursor-pointer active:scale-90 touch-manipulation ${opt.size} ${isSelected ? opt.activeClass : `bg-slate-900 hover:bg-slate-800 ${opt.defaultClass}`}`}
+                    className={`rounded-full border-[1.5px] transition-all duration-150 flex items-center justify-center cursor-pointer select-none active:scale-90 touch-manipulation ${opt.size} ${isSelected ? opt.activeClass : opt.defaultClass}`}
                     style={{ WebkitTapHighlightColor: 'transparent' }}
                   >
                     {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
@@ -278,8 +273,7 @@ const renderLikertScale = (questionId) => {
             })}
           </div>
 
-          {/* 右側文字 - 同樣加入 pointer-events-none */}
-          <div className="text-[10px] sm:text-xs font-medium text-pink-500/70 text-center leading-tight pointer-events-none">
+          <div className="text-[10px] sm:text-xs font-medium text-pink-500/70 text-center leading-tight pointer-events-none select-none">
             強烈<br/>同意
           </div>
           
@@ -338,11 +332,11 @@ const renderLikertScale = (questionId) => {
 
         <div className="space-y-4 mb-8">
           {currentQuestions.map((q, idx) => (
-            <div key={q.id} className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 p-5 rounded-2xl shadow-md transition-all hover:border-purple-500/30">
+            <div key={q.id} className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 p-5 rounded-2xl shadow-md">
               <div className="text-center mb-2">
                 <span className="text-[10px] font-bold text-slate-500 tracking-wider bg-slate-900 px-2 py-0.5 rounded-full">Q{startIndex + idx + 1}</span>
               </div>
-              <p className="text-slate-200 text-sm md:text-base text-center leading-relaxed font-medium px-2">
+              <p className="text-slate-200 text-sm md:text-base text-center leading-relaxed font-medium px-2 pointer-events-none select-none">
                 {q.text}
               </p>
               {renderLikertScale(q.id)}
@@ -360,7 +354,7 @@ const renderLikertScale = (questionId) => {
           </button>
           <button
             onClick={handleNext}
-            className={`flex items-center gap-1.5 px-6 py-2 text-sm rounded-full text-white font-semibold transition-all ${isCurrentPageComplete ? 'bg-gradient-to-r from-purple-600 to-pink-600 shadow-[0_0_15px_rgba(219,39,119,0.4)] hover:scale-105' : 'bg-slate-800 text-slate-500 border border-slate-700'}`}
+            className={`flex items-center gap-1.5 px-6 py-2 text-sm rounded-full text-white font-semibold transition-all ${isCurrentPageComplete ? 'bg-gradient-to-r from-purple-600 to-pink-600 shadow-[0_0_15px_rgba(219,39,119,0.4)] active:scale-95' : 'bg-slate-800 text-slate-500 border border-slate-700'}`}
           >
             {isLastPage ? '調製圖鑑' : '下一頁'} {isLastPage ? <CheckCircle2 className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
           </button>
@@ -394,26 +388,25 @@ const renderLikertScale = (questionId) => {
         <div className="mb-4 flex gap-3 z-20 relative">
           <button
             onClick={() => { dispatch({ type: 'RESET' }); scrollToTop(); }}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-full bg-slate-800/80 text-slate-300 hover:bg-slate-700 hover:text-white transition-all border border-slate-700 backdrop-blur-md"
+            className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-full bg-slate-800/80 text-slate-300 active:bg-slate-700 transition-all border border-slate-700 backdrop-blur-md"
           >
             <RotateCcw className="w-3.5 h-3.5" /> 重新測驗
           </button>
           <button
             onClick={handleDownload}
             disabled={isDownloading}
-            className={`flex items-center gap-1.5 px-5 py-2 text-sm rounded-full text-white font-bold transition-all border border-pink-500/50 backdrop-blur-md ${isDownloading ? 'bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-purple-600/90 to-pink-600/90 hover:from-purple-500 hover:to-pink-500 shadow-[0_0_15px_rgba(219,39,119,0.5)]'}`}
+            className={`flex items-center gap-1.5 px-5 py-2 text-sm rounded-full text-white font-bold transition-all border border-pink-500/50 backdrop-blur-md ${isDownloading ? 'bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-purple-600/90 to-pink-600/90 active:scale-95 shadow-[0_0_15px_rgba(219,39,119,0.5)]'}`}
           >
             {isDownloading ? <span className="animate-pulse">生成中...</span> : <><Download className="w-3.5 h-3.5" /> 儲存圖鑑</>}
           </button>
         </div>
 
-        {/* 截圖範圍 (大幅縮減 Padding 與間距) */}
+        {/* 截圖範圍 */}
         <div 
           ref={resultRef}
           className="w-full max-w-xl bg-[#0a0f1c] p-4 md:p-6 rounded-[1.5rem] border border-slate-700/50 shadow-2xl relative overflow-hidden"
           style={{ backgroundImage: 'radial-gradient(circle at 50% 0%, rgba(88,28,135,0.15) 0%, transparent 50%), radial-gradient(circle at 50% 100%, rgba(219,39,119,0.1) 0%, transparent 50%)' }}
         >
-          {/* 標題區 (高度縮減) */}
           <div className="text-center relative z-10 mb-6">
             <h2 className="text-2xl md:text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-300 to-pink-400 tracking-widest drop-shadow-sm mb-3">
               {userTitle}
@@ -431,7 +424,6 @@ const renderLikertScale = (questionId) => {
             </div>
           </div>
 
-          {/* 高腳杯 Grid - 強制 5 欄，極度緊湊排版 */}
           <div className="grid grid-cols-5 gap-y-4 gap-x-1 sm:gap-x-2 relative z-10 mx-auto">
             {ATTRIBUTES.map((attr, idx) => {
               const score = attrScores[idx];
@@ -440,7 +432,6 @@ const renderLikertScale = (questionId) => {
               return (
                 <div key={idx} className="flex flex-col items-center">
                   <div className="relative flex flex-col items-center">
-                    {/* 杯身 - 尺寸大縮小 */}
                     <div className="w-10 h-12 sm:w-11 sm:h-14 rounded-b-full rounded-t-[2px] border-[1.5px] border-white/20 overflow-hidden relative shadow-[inset_0_0_10px_rgba(255,255,255,0.05)] bg-white/5 backdrop-blur-sm z-10">
                       <div className="absolute inset-0 flex items-end">
                         <motion.div 
@@ -456,12 +447,10 @@ const renderLikertScale = (questionId) => {
                         </motion.div>
                       </div>
                     </div>
-                    {/* 杯梗與底座 */}
                     <div className="w-[3px] h-4 sm:h-5 bg-gradient-to-b from-white/30 to-white/10 z-0" />
                     <div className="w-6 sm:w-7 h-[3px] bg-white/20 rounded-full shadow-[0_2px_5px_rgba(0,0,0,0.5)] z-0" />
                   </div>
                   
-                  {/* 標籤 - 文字縮小且緊湊 */}
                   <div className="text-center mt-1.5 w-full flex flex-col items-center justify-center">
                     <div className="text-[9px] sm:text-[10px] font-bold text-slate-200 leading-none tracking-tighter whitespace-nowrap transform scale-90 sm:scale-100 origin-top">
                       {attr}
@@ -475,7 +464,6 @@ const renderLikertScale = (questionId) => {
             })}
           </div>
 
-          {/* 浮水印 Footer - 去除個人帳號，改為官方質感標籤 */}
           <div className="mt-8 pt-4 border-t border-slate-800/50 flex flex-col items-center justify-center relative z-10">
             <div className="flex items-center gap-1.5 text-slate-400 font-bold text-[10px] md:text-xs tracking-widest mb-1">
               <Sparkles className="w-3.5 h-3.5 text-purple-500/70" /> 專屬慾望調酒分析
@@ -486,7 +474,6 @@ const renderLikertScale = (questionId) => {
           </div>
         </div>
 
-        {/* 長按儲存 Modal */}
         <AnimatePresence>
           {generatedImage && (
             <motion.div
