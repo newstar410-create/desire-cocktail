@@ -241,20 +241,20 @@ export default function App() {
     </motion.div>
   );
 
-  const renderLikertScale = (questionId) => {
+const renderLikertScale = (questionId) => {
     const options = [
-      { value: 1, size: 'w-10 h-10 md:w-12 md:h-12', defaultClass: 'border-slate-700 text-slate-500', activeClass: 'bg-slate-700 border-slate-500 text-white shadow-inner' },
+      { value: 1, size: 'w-9 h-9 md:w-12 md:h-12', defaultClass: 'border-slate-700 text-slate-500', activeClass: 'bg-slate-700 border-slate-500 text-white shadow-inner' },
       { value: 2, size: 'w-8 h-8 md:w-10 md:h-10', defaultClass: 'border-slate-800 text-slate-600', activeClass: 'bg-slate-600 border-slate-500 text-white' },
-      { value: 3, size: 'w-6 h-6 md:w-8 md:h-8',   defaultClass: 'border-slate-800/50 text-slate-700', activeClass: 'bg-blue-900/60 border-blue-500/50 text-blue-300' },
+      { value: 3, size: 'w-7 h-7 md:w-8 md:h-8',   defaultClass: 'border-slate-800/50 text-slate-700', activeClass: 'bg-blue-900/60 border-blue-500/50 text-blue-300' },
       { value: 4, size: 'w-8 h-8 md:w-10 md:h-10', defaultClass: 'border-purple-900/50 text-purple-800', activeClass: 'bg-purple-600 border-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]' },
-      { value: 5, size: 'w-10 h-10 md:w-12 md:h-12', defaultClass: 'border-pink-900/50 text-pink-800', activeClass: 'bg-pink-600 border-pink-500 text-white shadow-[0_0_20px_rgba(219,39,119,0.6)]' },
+      { value: 5, size: 'w-9 h-9 md:w-12 md:h-12', defaultClass: 'border-pink-900/50 text-pink-800', activeClass: 'bg-pink-600 border-pink-500 text-white shadow-[0_0_20px_rgba(219,39,119,0.6)]' },
     ];
 
     return (
-      <div className="flex flex-col items-center mt-5">
-        <div className="flex justify-between items-center w-full max-w-sm gap-2 px-1">
-          <span className="text-[10px] md:text-xs font-medium text-slate-500 w-10 text-right leading-tight">強烈<br/>不同意</span>
-          <div className="flex items-center justify-center gap-2 md:gap-3 flex-1">
+      <div className="flex flex-col items-center mt-4 w-full">
+        <div className="flex justify-between items-center w-full gap-1 px-0">
+          <span className="text-[10px] font-medium text-slate-500 w-12 text-right leading-tight flex-shrink-0">強烈<br/>不同意</span>
+          <div className="flex items-center justify-center gap-1.5 sm:gap-3 flex-1 px-1">
             {options.map((opt) => {
               const isSelected = state.answers[questionId] === opt.value;
               return (
@@ -262,14 +262,14 @@ export default function App() {
                   key={opt.value}
                   whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
                   onClick={() => dispatch({ type: 'ANSWER', payload: { id: questionId, score: opt.value } })}
-                  className={`rounded-full border-[1.5px] transition-all duration-200 flex-shrink-0 flex items-center justify-center text-sm font-bold ${opt.size} ${isSelected ? opt.activeClass : `bg-slate-900 hover:bg-slate-800 ${opt.defaultClass}`}`}
+                  className={`rounded-full border-[1.5px] transition-all duration-200 flex-shrink-0 flex items-center justify-center text-xs font-bold ${opt.size} ${isSelected ? opt.activeClass : `bg-slate-900 hover:bg-slate-800 ${opt.defaultClass}`}`}
                 >
                   {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
                 </motion.button>
               );
             })}
           </div>
-          <span className="text-[10px] md:text-xs font-medium text-pink-500/70 w-10 text-left leading-tight">強烈<br/>同意</span>
+          <span className="text-[10px] font-medium text-pink-500/70 w-12 text-left leading-tight flex-shrink-0">強烈<br/>同意</span>
         </div>
       </div>
     );
