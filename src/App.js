@@ -530,13 +530,26 @@ export default function App() {
           {state.status === 'result' && renderResult()}
         </AnimatePresence>
       </main>
-      <style dangerouslySetInnerHTML={{__html: `
+<style dangerouslySetInnerHTML={{__html: `
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
           100% { transform: translateX(100%); }
         }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* 蘋果 Safari 終極防卡死黑科技：徹底關閉所有隱形選取與干擾手勢 */
+        * {
+          -webkit-tap-highlight-color: transparent !important;
+          -webkit-touch-callout: none !important;
+          -webkit-user-select: none !important;
+          user-select: none !important;
+        }
+        
+        body {
+          touch-action: manipulation !important;
+          overscroll-behavior-y: none;
+        }
       `}} />
     </div>
   );
