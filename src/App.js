@@ -241,40 +241,48 @@ export default function App() {
     </motion.div>
   );
 
-  const renderLikertScale = (questionId) => {
-    // 加入 min-w 強制鎖定尺寸，徹底解決 Safari 擠壓變形 Bug
+const renderLikertScale = (questionId) => {
     const options = [
-      { value: 1, size: 'w-8 h-8 min-w-[32px] md:w-12 md:h-12 md:min-w-[48px]', defaultClass: 'border-slate-700 text-slate-500', activeClass: 'bg-slate-700 border-slate-500 text-white shadow-inner' },
-      { value: 2, size: 'w-7 h-7 min-w-[28px] md:w-10 md:h-10 md:min-w-[40px]', defaultClass: 'border-slate-800 text-slate-600', activeClass: 'bg-slate-600 border-slate-500 text-white' },
-      { value: 3, size: 'w-6 h-6 min-w-[24px] md:w-8 md:h-8 md:min-w-[32px]',   defaultClass: 'border-slate-800/50 text-slate-700', activeClass: 'bg-blue-900/60 border-blue-500/50 text-blue-300' },
-      { value: 4, size: 'w-7 h-7 min-w-[28px] md:w-10 md:h-10 md:min-w-[40px]', defaultClass: 'border-purple-900/50 text-purple-800', activeClass: 'bg-purple-600 border-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]' },
-      { value: 5, size: 'w-8 h-8 min-w-[32px] md:w-12 md:h-12 md:min-w-[48px]', defaultClass: 'border-pink-900/50 text-pink-800', activeClass: 'bg-pink-600 border-pink-500 text-white shadow-[0_0_20px_rgba(219,39,119,0.6)]' },
+      { value: 1, size: 'w-7 h-7 sm:w-11 sm:h-11', defaultClass: 'border-slate-700 text-slate-500', activeClass: 'bg-slate-700 border-slate-500 text-white shadow-inner' },
+      { value: 2, size: 'w-6 h-6 sm:w-9 sm:h-9', defaultClass: 'border-slate-800 text-slate-600', activeClass: 'bg-slate-600 border-slate-500 text-white' },
+      { value: 3, size: 'w-5 h-5 sm:w-7 sm:h-7',   defaultClass: 'border-slate-800/50 text-slate-700', activeClass: 'bg-blue-900/60 border-blue-500/50 text-blue-300' },
+      { value: 4, size: 'w-6 h-6 sm:w-9 sm:h-9', defaultClass: 'border-purple-900/50 text-purple-800', activeClass: 'bg-purple-600 border-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]' },
+      { value: 5, size: 'w-7 h-7 sm:w-11 sm:h-11', defaultClass: 'border-pink-900/50 text-pink-800', activeClass: 'bg-pink-600 border-pink-500 text-white shadow-[0_0_20px_rgba(219,39,119,0.6)]' },
     ];
 
     return (
-      <div className="flex flex-col items-center mt-5 w-full">
-        <div className="flex justify-between items-center w-full max-w-sm gap-1 px-1">
-          <div className="text-[10px] md:text-xs font-medium text-slate-500 w-10 min-w-[40px] text-center leading-tight flex-shrink-0">
+      <div className="mt-5 w-full max-w-[400px] mx-auto px-1 sm:px-0">
+        {/* 使用 Grid 強制劃分 3 個區塊：文字 | 5個按鈕 | 文字 */}
+        <div className="grid grid-cols-[36px_1fr_36px] sm:grid-cols-[48px_1fr_48px] items-center gap-1 sm:gap-2">
+          
+          {/* 左側文字 */}
+          <div className="text-[10px] sm:text-xs font-medium text-slate-500 text-center leading-tight">
             強烈<br/>不同意
           </div>
-          <div className="flex items-center justify-center gap-1.5 sm:gap-3 flex-1">
+
+          {/* 中間 5 個按鈕 */}
+          <div className="flex items-center justify-between w-full px-1">
             {options.map((opt) => {
               const isSelected = state.answers[questionId] === opt.value;
               return (
-                <motion.button
-                  key={opt.value}
-                  whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
-                  onClick={() => dispatch({ type: 'ANSWER', payload: { id: questionId, score: opt.value } })}
-                  className={`rounded-full border-[1.5px] transition-all duration-200 flex-shrink-0 flex items-center justify-center ${opt.size} ${isSelected ? opt.activeClass : `bg-slate-900 hover:bg-slate-800 ${opt.defaultClass}`}`}
-                >
-                  {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
-                </motion.button>
+                <div key={opt.value} className="flex justify-center flex-1">
+                  <motion.button
+                    whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+                    onClick={() => dispatch({ type: 'ANSWER', payload: { id: questionId, score: opt.value } })}
+                    className={`rounded-full border-[1.5px] transition-all duration-200 flex items-center justify-center ${opt.size} ${isSelected ? opt.activeClass : `bg-slate-900 hover:bg-slate-800 ${opt.defaultClass}`}`}
+                  >
+                    {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
+                  </motion.button>
+                </div>
               );
             })}
           </div>
-          <div className="text-[10px] md:text-xs font-medium text-pink-500/70 w-10 min-w-[40px] text-center leading-tight flex-shrink-0">
+
+          {/* 右側文字 */}
+          <div className="text-[10px] sm:text-xs font-medium text-pink-500/70 text-center leading-tight">
             強烈<br/>同意
           </div>
+          
         </div>
       </div>
     );
