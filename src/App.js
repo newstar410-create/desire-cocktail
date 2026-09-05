@@ -4,7 +4,7 @@ import { Wine, ArrowRight, ArrowLeft, CheckCircle2, RotateCcw, Download, Sparkle
 
 // 35 個全面中立化、通用且對應題庫的核心屬性
 const ATTRIBUTES = [
-  '親密貼貼', '溫柔接吻', '深層舌吻', '舔舐', '口交', '實戰插入', '羽觸輕撫', '指尖探索', '手部套弄', '外在強烈刺激',
+ '親密貼貼', '溫柔接吻', '深層舌吻', '舔舐', '口交', '實戰插入', '羽觸輕撫', '指尖探索', '手部套弄', '外在強烈刺激',
   '內部深處高潮', '精神腦高潮', '失控潮吹', '情趣玩具', '敏感帶玩弄', '言語調教', '極致痙攣快感', '挑逗寸止', '蒙眼剝奪', '輕度懲罰',
   '窒息眩暈', '繩縛拘束', '深喉吞嚥', '純粹洩慾', '狂野猛烈', '後庭探索', '無套內射', '多人派對', '鏡頭記錄', '角色扮演',
   '鏡前做愛', '精神催眠', '背德NTR', '野外戶外', '體液吞嚥'
@@ -229,7 +229,7 @@ export default function App() {
       <motion.button
         whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
         onClick={() => { dispatch({ type: 'START_QUIZ' }); scrollToTop(); }}
-        className="px-8 py-3 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-base shadow-[0_0_20px_rgba(219,39,119,0.5)] flex items-center gap-2 transition-shadow"
+        className="px-8 py-3 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-base shadow-[0_0_20px_rgba(219,39,119,0.5)] flex items-center gap-2"
       >
         開始測驗 <ArrowRight className="w-4 h-4" />
       </motion.button>
@@ -237,46 +237,44 @@ export default function App() {
   );
 
   const renderLikertScale = (questionId) => {
-    // 終極防彈版：徹底拔除 hover 樣式，根絕 Safari 雙擊與卡死 Bug
+    // 終極防彈版：文字移至上方，徹底釋放 100% 寬度給按鈕，並加入超大隱形點擊區
     const options = [
-      { value: 1, size: 'w-7 h-7 sm:w-11 sm:h-11', defaultClass: 'border-slate-700 text-slate-500 bg-slate-900', activeClass: 'bg-slate-700 border-slate-500 text-white shadow-inner' },
-      { value: 2, size: 'w-6 h-6 sm:w-9 sm:h-9', defaultClass: 'border-slate-800 text-slate-600 bg-slate-900', activeClass: 'bg-slate-600 border-slate-500 text-white' },
-      { value: 3, size: 'w-5 h-5 sm:w-7 sm:h-7',   defaultClass: 'border-slate-800/50 text-slate-700 bg-slate-900', activeClass: 'bg-blue-900/60 border-blue-500/50 text-blue-300' },
-      { value: 4, size: 'w-6 h-6 sm:w-9 sm:h-9', defaultClass: 'border-purple-900/50 text-purple-800 bg-slate-900', activeClass: 'bg-purple-600 border-purple-500 text-white shadow-[0_0_15px_rgba(168,85,247,0.4)]' },
-      { value: 5, size: 'w-7 h-7 sm:w-11 sm:h-11', defaultClass: 'border-pink-900/50 text-pink-800 bg-slate-900', activeClass: 'bg-pink-600 border-pink-500 text-white shadow-[0_0_20px_rgba(219,39,119,0.6)]' },
+      { value: 1, size: 'w-7 h-7 sm:w-10 sm:h-10', defaultClass: 'border-slate-700 text-slate-500 bg-[#0f172a]', activeClass: 'bg-slate-700 border-slate-400 text-white shadow-inner' },
+      { value: 2, size: 'w-6 h-6 sm:w-8 sm:h-8', defaultClass: 'border-slate-700 text-slate-600 bg-[#0f172a]', activeClass: 'bg-slate-600 border-slate-500 text-white' },
+      { value: 3, size: 'w-5 h-5 sm:w-6 sm:h-6', defaultClass: 'border-slate-800 text-slate-700 bg-[#0f172a]', activeClass: 'bg-blue-900/80 border-blue-500 text-blue-300' },
+      { value: 4, size: 'w-6 h-6 sm:w-8 sm:h-8', defaultClass: 'border-purple-900/60 text-purple-800 bg-[#0f172a]', activeClass: 'bg-purple-600 border-purple-400 text-white shadow-[0_0_10px_rgba(168,85,247,0.4)]' },
+      { value: 5, size: 'w-7 h-7 sm:w-10 sm:h-10', defaultClass: 'border-pink-900/60 text-pink-800 bg-[#0f172a]', activeClass: 'bg-pink-600 border-pink-400 text-white shadow-[0_0_15px_rgba(219,39,119,0.6)]' },
     ];
 
     return (
-      <div className="mt-5 w-full max-w-[400px] mx-auto px-1 sm:px-0">
-        <div className="grid grid-cols-[36px_1fr_36px] sm:grid-cols-[48px_1fr_48px] items-center gap-1 sm:gap-2">
-          
-          <div className="text-[10px] sm:text-xs font-medium text-slate-500 text-center leading-tight pointer-events-none select-none">
-            強烈<br/>不同意
-          </div>
+      <div className="mt-4 w-full max-w-[320px] sm:max-w-[400px] mx-auto select-none">
+        {/* 文字區塊：直接放在最上方兩側，絕對不會跟按鈕互擠 */}
+        <div className="flex justify-between px-1 mb-2">
+          <span className="text-[11px] sm:text-xs text-slate-500 font-medium tracking-wider">強烈不同意</span>
+          <span className="text-[11px] sm:text-xs text-pink-500/70 font-medium tracking-wider">強烈同意</span>
+        </div>
 
-          <div className="flex items-center justify-between w-full px-1">
-            {options.map((opt) => {
-              const isSelected = state.answers[questionId] === opt.value;
-              return (
-                <div key={opt.value} className="flex justify-center flex-1">
-                  {/* 使用原生 HTML button，並加上 select-none 和 touch-manipulation 防止所有瀏覽器干擾 */}
-                  <button
-                    type="button"
-                    onClick={() => dispatch({ type: 'ANSWER', payload: { id: questionId, score: opt.value } })}
-                    className={`rounded-full border-[1.5px] transition-all duration-150 flex items-center justify-center cursor-pointer select-none active:scale-90 touch-manipulation ${opt.size} ${isSelected ? opt.activeClass : opt.defaultClass}`}
-                    style={{ WebkitTapHighlightColor: 'transparent' }}
-                  >
-                    {isSelected && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
-                  </button>
+        {/* 按鈕區塊 */}
+        <div className="flex items-center justify-between w-full relative z-10 px-2">
+          {/* 視覺引導線 */}
+          <div className="absolute left-6 right-6 top-1/2 -translate-y-1/2 h-[2px] bg-slate-800 -z-10 rounded-full" />
+
+          {options.map((opt) => {
+            const isSelected = state.answers[questionId] === opt.value;
+            return (
+              <div
+                key={opt.value}
+                /* 這裡的 py-4 加上 flex-1 創造了兩倍大的隱形點擊範圍 */
+                className="flex-1 flex justify-center items-center cursor-pointer touch-manipulation py-4"
+                onClick={() => dispatch({ type: 'ANSWER', payload: { id: questionId, score: opt.value } })}
+                style={{ WebkitTapHighlightColor: 'transparent' }}
+              >
+                <div className={`rounded-full border-2 transition-colors duration-150 flex items-center justify-center pointer-events-none shadow-md ${opt.size} ${isSelected ? opt.activeClass : opt.defaultClass}`}>
+                  {isSelected && <div className="w-2 h-2 bg-white rounded-full shadow-sm" />}
                 </div>
-              );
-            })}
-          </div>
-
-          <div className="text-[10px] sm:text-xs font-medium text-pink-500/70 text-center leading-tight pointer-events-none select-none">
-            強烈<br/>同意
-          </div>
-          
+              </div>
+            );
+          })}
         </div>
       </div>
     );
@@ -305,7 +303,8 @@ export default function App() {
         initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}
         className="max-w-2xl mx-auto py-4 px-3"
       >
-        <div className="mb-6 bg-slate-900/80 backdrop-blur-md p-3 rounded-xl border border-slate-800 sticky top-2 z-40 shadow-lg">
+        {/* 拔除 backdrop-blur-md，改用純色 bg-[#0f172a] 防當機 */}
+        <div className="mb-6 bg-[#0f172a] p-3 rounded-xl border border-slate-700 sticky top-2 z-40 shadow-xl">
           <div className="flex justify-between text-[11px] text-slate-400 mb-2 font-medium">
             <span>進度 {state.currentPage + 1} / {TOTAL_PAGES} ({startIndex + 1}-{Math.min(startIndex + 5, 70)}題)</span>
             <span className="text-pink-400">{Math.round(progress)}%</span>
@@ -332,9 +331,10 @@ export default function App() {
 
         <div className="space-y-4 mb-8">
           {currentQuestions.map((q, idx) => (
-            <div key={q.id} className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 p-5 rounded-2xl shadow-md">
-              <div className="text-center mb-2">
-                <span className="text-[10px] font-bold text-slate-500 tracking-wider bg-slate-900 px-2 py-0.5 rounded-full">Q{startIndex + idx + 1}</span>
+            // 拔除 backdrop-blur-sm，改用純色 bg-[#1e293b] 防當機
+            <div key={q.id} className="bg-[#1e293b] border border-slate-700 p-5 rounded-2xl shadow-lg">
+              <div className="text-center mb-3">
+                <span className="text-[10px] font-bold text-slate-500 tracking-wider bg-slate-900 px-3 py-1 rounded-full">Q{startIndex + idx + 1}</span>
               </div>
               <p className="text-slate-200 text-sm md:text-base text-center leading-relaxed font-medium px-2 pointer-events-none select-none">
                 {q.text}
@@ -388,14 +388,14 @@ export default function App() {
         <div className="mb-4 flex gap-3 z-20 relative">
           <button
             onClick={() => { dispatch({ type: 'RESET' }); scrollToTop(); }}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-full bg-slate-800/80 text-slate-300 active:bg-slate-700 transition-all border border-slate-700 backdrop-blur-md"
+            className="flex items-center gap-1.5 px-4 py-2 text-sm rounded-full bg-slate-800/80 text-slate-300 active:bg-slate-700 transition-all border border-slate-700"
           >
             <RotateCcw className="w-3.5 h-3.5" /> 重新測驗
           </button>
           <button
             onClick={handleDownload}
             disabled={isDownloading}
-            className={`flex items-center gap-1.5 px-5 py-2 text-sm rounded-full text-white font-bold transition-all border border-pink-500/50 backdrop-blur-md ${isDownloading ? 'bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-purple-600/90 to-pink-600/90 active:scale-95 shadow-[0_0_15px_rgba(219,39,119,0.5)]'}`}
+            className={`flex items-center gap-1.5 px-5 py-2 text-sm rounded-full text-white font-bold transition-all border border-pink-500/50 ${isDownloading ? 'bg-slate-800 text-slate-400 cursor-not-allowed' : 'bg-gradient-to-r from-purple-600/90 to-pink-600/90 active:scale-95 shadow-[0_0_15px_rgba(219,39,119,0.5)]'}`}
           >
             {isDownloading ? <span className="animate-pulse">生成中...</span> : <><Download className="w-3.5 h-3.5" /> 儲存圖鑑</>}
           </button>
@@ -432,7 +432,7 @@ export default function App() {
               return (
                 <div key={idx} className="flex flex-col items-center">
                   <div className="relative flex flex-col items-center">
-                    <div className="w-10 h-12 sm:w-11 sm:h-14 rounded-b-full rounded-t-[2px] border-[1.5px] border-white/20 overflow-hidden relative shadow-[inset_0_0_10px_rgba(255,255,255,0.05)] bg-white/5 backdrop-blur-sm z-10">
+                    <div className="w-10 h-12 sm:w-11 sm:h-14 rounded-b-full rounded-t-[2px] border-[1.5px] border-white/20 overflow-hidden relative shadow-[inset_0_0_10px_rgba(255,255,255,0.05)] bg-white/5 z-10">
                       <div className="absolute inset-0 flex items-end">
                         <motion.div 
                           className={`w-full ${level.color} relative`}
@@ -442,7 +442,7 @@ export default function App() {
                           transition={{ duration: 1.5, delay: 0.05 * (idx % 10), ease: "easeOut" }}
                         >
                           {level.percent !== '0%' && (
-                            <div className="absolute top-0 left-0 right-0 h-1 bg-white/40 backdrop-blur-md" />
+                            <div className="absolute top-0 left-0 right-0 h-1 bg-white/40" />
                           )}
                         </motion.div>
                       </div>
@@ -522,7 +522,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] font-sans text-slate-200 selection:bg-pink-500/30 overflow-x-hidden pb-6 relative">
+    <div className="min-h-screen bg-[#020617] font-sans text-slate-200 overflow-x-hidden pb-6 relative">
       <main className="w-full">
         <AnimatePresence mode="wait">
           {state.status === 'start' && renderStart()}
@@ -530,7 +530,7 @@ export default function App() {
           {state.status === 'result' && renderResult()}
         </AnimatePresence>
       </main>
-<style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{__html: `
         @keyframes shimmer {
           0% { transform: translateX(-100%); }
           100% { transform: translateX(100%); }
@@ -538,16 +538,14 @@ export default function App() {
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* 蘋果 Safari 終極防卡死黑科技：徹底關閉所有隱形選取與干擾手勢 */
+        /* 全域防護：強制關閉蘋果瀏覽器的各種隱形點擊干擾與反白 */
         * {
           -webkit-tap-highlight-color: transparent !important;
           -webkit-touch-callout: none !important;
           -webkit-user-select: none !important;
           user-select: none !important;
         }
-        
         body {
-          touch-action: manipulation !important;
           overscroll-behavior-y: none;
         }
       `}} />
